@@ -4,21 +4,23 @@
 CREATE TABLE IF NOT EXISTS users
 (
     id         BIGSERIAL PRIMARY KEY,
-    name       VARCHAR(64),
-    surname    VARCHAR(64),
-    email      VARCHAR(255) NOT NULL UNIQUE,
-    birth_date DATE
+    name       VARCHAR(64)  NOT NULL,
+    surname    VARCHAR(64)  NOT NULL,
+    email      VARCHAR(128) NOT NULL,
+    birth_date DATE         NOT NULL,
+    CONSTRAINT uq_users_email UNIQUE (email)
 );
 
 --changeset dshparko:2
 CREATE TABLE IF NOT EXISTS card_info
 (
     id              BIGSERIAL PRIMARY KEY,
-    user_id         BIGINT      NOT NULL REFERENCES users (id) ON DELETE CASCADE,
-    number          VARCHAR(64) NOT NULL UNIQUE,
-    holder          VARCHAR(128),
-    expiration_date DATE
+    user_id         BIGINT       NOT NULL,
+    number          VARCHAR(19)  NOT NULL,
+    holder          VARCHAR(128) NOT NULL,
+    expiration_date DATE         NOT NULL,
+    CONSTRAINT fk_card_user FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
+    CONSTRAINT uq_card_number UNIQUE (number),
+    CONSTRAINT chk_card_number CHECK (number ~ '^[0-9]{13,19}$')
 );
-
---changeset dshparko:3
-CREATE INDEX idx_card_info_user_id ON card_info(user_id);
+CREATE INDEX IF NOT EXISTS idx_card_info_user_id ON card_info (user_id);
