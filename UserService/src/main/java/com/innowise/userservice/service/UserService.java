@@ -47,7 +47,7 @@ public class UserService {
      * Retrieves a user by ID and caches the result.
      *
      * @param id unique identifier of the user
-     * @return mapped {@link UserResponse} if found
+     * @return mapped {@link UserWithCardsResponse} if found
      * @throws UserNotFoundException if no user exists with the given ID
      */
     public UserWithCardsResponse findById(Long id) throws UserNotFoundException {
@@ -60,23 +60,23 @@ public class UserService {
      * Retrieves multiple users by their IDs.
      *
      * @param ids list of user IDs to fetch
-     * @return list of mapped {@link UserResponse} objects
+     * @return list of mapped {@link UserWithCardsResponse} objects
      */
-    public List<UserResponse> findUsersByIds(List<Long> ids) {
-        return userMapper.mapToResponseList(userRepository.findByIdIn(ids));
+    public List<UserWithCardsResponse> findUsersByIds(List<Long> ids) {
+        return userMapper.mapToUserWithCardsResponseList(userRepository.findByIdIn(ids));
     }
 
     /**
      * Retrieves a user by email.
      *
      * @param email email address of the user
-     * @return mapped {@link UserResponse} if found
+     * @return mapped {@link UserWithCardsResponse} if found
      * @throws UserNotFoundException if no user exists with the given email
      */
-    public UserResponse findUserByEmail(String email) {
+    public UserWithCardsResponse findUserByEmail(String email) {
         User user = userRepository.findUserByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("Email", email));
-        return userMapper.mapToResponse(user);
+        return userMapper.mapToUserWithCards(user);
     }
 
     /**
@@ -122,10 +122,10 @@ public class UserService {
     /**
      * Retrieves all users in the system.
      *
-     * @return list of mapped {@link UserResponse} objects
+     * @return list of mapped {@link UserWithCardsResponse} objects
      */
-    public List<UserResponse> findAll() {
-        return userMapper.mapToResponseList(userRepository.findAll());
+    public List<UserWithCardsResponse> findAll() {
+        return userMapper.mapToUserWithCardsResponseList(userRepository.findAll());
     }
 
 }

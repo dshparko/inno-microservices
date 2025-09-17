@@ -2,7 +2,6 @@ package com.innowise.userservice.mapper;
 
 import com.innowise.userservice.database.entity.User;
 import com.innowise.userservice.dto.user.CreateUserRequest;
-import com.innowise.userservice.dto.user.UpdateUserRequest;
 import com.innowise.userservice.dto.user.UserResponse;
 import com.innowise.userservice.dto.user.UserWithCardsResponse;
 import org.mapstruct.Mapper;
@@ -39,21 +38,12 @@ public interface UserMapper {
     User mapToEntity(CreateUserRequest request);
 
     /**
-     * Maps an {@link UpdateUserRequest} DTO to a {@link User} entity.
-     * Used during user update operations.
-     *
-     * @param request the DTO containing updated user data
-     * @return the mapped user entity
-     */
-    User mapToEntity(UpdateUserRequest request);
-
-    /**
-     * Maps a list of {@link User} entities to a list of {@link UserResponse} DTOs.
+     * Maps a list of {@link User} entities to a list of {@link UserWithCardsResponse} DTOs.
      *
      * @param entities the list of user entities to convert
      * @return the list of mapped response DTOs
      */
-    List<UserResponse> mapToResponseList(List<User> entities);
+    List<UserWithCardsResponse> mapToUserWithCardsResponseList(List<User> entities);
 
     /**
      * Maps a {@link User} entity to a {@link UserWithCardsResponse} DTO.
