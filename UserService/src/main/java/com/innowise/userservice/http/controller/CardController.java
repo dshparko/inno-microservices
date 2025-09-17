@@ -37,11 +37,22 @@ public class CardController {
 
     private final CardService cardService;
 
-    @GetMapping("/id={id}")
+    /**
+     * Retrieves a card by its unique identifier.
+     *
+     * @param id the ID of the card to retrieve
+     * @return {@link CardResponse} representing the card
+     */
+    @GetMapping("/{id}")
     public ResponseEntity<CardResponse> cardById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(cardService.findById(id));
     }
 
+    /**
+     * Retrieves all cards in the system.
+     *
+     * @return list of {@link CardResponse} objects; 204 No Content if none found
+     */
     @GetMapping
     public ResponseEntity<List<CardResponse>> findAll() {
         List<CardResponse> cards = cardService.findAll();
@@ -51,6 +62,12 @@ public class CardController {
         return ResponseEntity.ok(cards);
     }
 
+    /**
+     * Retrieves multiple cards by their IDs.
+     *
+     * @param ids list of card IDs to retrieve
+     * @return list of {@link CardResponse} objects; 204 No Content if none found
+     */
     @GetMapping("/batch")
     public ResponseEntity<List<CardResponse>> findCardsByIds(@RequestParam List<Long> ids) {
         List<CardResponse> cards = cardService.findCardsByIds(ids);
@@ -60,20 +77,50 @@ public class CardController {
         return ResponseEntity.ok(cards);
     }
 
+    /**
+     * Creates a new card.
+     *
+     * @param request DTO containing card creation data
+     * @return {@link CardResponse} representing the newly created card
+     */
     @PostMapping
     public ResponseEntity<CardResponse> createCard(@RequestBody @Valid CreateCardRequest request) {
         return ResponseEntity.ok(cardService.createCard(request));
     }
 
+    /**
+     * Updates an existing card.
+     *
+     * @param request DTO containing updated card data
+     * @return 200 OK if update was successful
+     */
     @PutMapping
     public ResponseEntity<CardResponse> updateCard(@RequestBody @Valid UpdateCardRequest request) {
         cardService.updateCard(request);
         return ResponseEntity.ok().build();
     }
 
+    /**
+     * Deletes a card by its ID.
+     *
+     * @param id the ID of the card to delete
+     * @return 200 OK if deletion was successful
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<HttpStatus> deleteCard(@PathVariable("id") Long id) {
         cardService.deleteById(id);
         return ResponseEntity.ok().build();
+    }
+
+    /**
+     * Retrieves all cards associated with a specific user.
+     *
+     * @param userId the ID of the user whose cards to retrieve
+     * @return list of {@link CardResponse} objects linked to the user
+     */
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<CardResponse>> getUserCards(@PathVariable Long userId) {
+        List<CardResponse> cards = cardService.findCardsByUserId(userId);
+        return ResponseEntity.ok(cards);
     }
 }

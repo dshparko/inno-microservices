@@ -6,7 +6,6 @@ import com.innowise.userservice.dto.user.UpdateUserRequest;
 import com.innowise.userservice.dto.user.UserResponse;
 import com.innowise.userservice.dto.user.UserWithCardsResponse;
 import com.innowise.userservice.http.exception.UserNotFoundException;
-import com.innowise.userservice.service.CardService;
 import com.innowise.userservice.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -39,18 +38,36 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
-    private final CardService cardService;
 
-    @GetMapping("/id={id}")
+    /**
+     * Retrieves a user by their unique identifier.
+     *
+     * @param id the ID of the user to retrieve
+     * @return {@link UserWithCardsResponse} containing user data and associated cards
+     * @throws UserNotFoundException if no user exists with the given ID
+     */
+    @GetMapping("/id/{id}")
     public ResponseEntity<UserWithCardsResponse> userById(@PathVariable("id") Long id) throws UserNotFoundException {
         return ResponseEntity.ok(userService.findById(id));
     }
 
-    @GetMapping("/email={email}")
+    /**
+     * Retrieves a user by their email address.
+     *
+     * @param email the email of the user to retrieve
+     * @return {@link UserWithCardsResponse} containing user data and associated cards
+     * @throws UserNotFoundException if no user exists with the given email
+     */
+    @GetMapping("/email/{email}")
     public ResponseEntity<UserWithCardsResponse> findUserByEmail(@PathVariable("email") String email) {
         return ResponseEntity.ok(userService.findUserByEmail(email));
     }
 
+    /**
+     * Retrieves all users in the system.
+     *
+     * @return list of {@link UserWithCardsResponse} objects; 204 No Content if empty
+     */
     @GetMapping
     public ResponseEntity<List<UserWithCardsResponse>> findAll() {
         List<UserWithCardsResponse> users = userService.findAll();
@@ -60,6 +77,12 @@ public class UserController {
         return ResponseEntity.ok(users);
     }
 
+    /**
+     * Retrieves multiple users by their IDs.
+     *
+     * @param ids list of user IDs to retrieve
+     * @return list of {@link UserWithCardsResponse} objects; 204 No Content if none found
+     */
     @GetMapping("/batch")
     public ResponseEntity<List<UserWithCardsResponse>> findUsersByIds(@RequestParam List<Long> ids) {
         List<UserWithCardsResponse> users = userService.findUsersByIds(ids);
@@ -69,34 +92,38 @@ public class UserController {
         return ResponseEntity.ok(users);
     }
 
+    /**
+     * Creates a new user.
+     *
+     * @param user DTO containing user creation data
+     * @return {@link UserResponse} representing the newly created user
+     */
     @PostMapping
     public ResponseEntity<UserResponse> createUser(@RequestBody @Valid CreateUserRequest user) {
         return ResponseEntity.ok(userService.createUser(user));
     }
 
+    /**
+     * Updates an existing user.
+     *
+     * @param user DTO containing updated user data
+     * @return 200 OK if update was successful
+     */
     @PutMapping
     public ResponseEntity<Void> updateUser(@RequestBody @Valid UpdateUserRequest user) {
         userService.updateUser(user);
         return ResponseEntity.ok().build();
     }
 
+    /**
+     * Deletes a user by their ID.
+     *
+     * @param id the ID of the user to delete
+     * @return 200 OK if deletion was successful
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable("id") Long id) {
         userService.deleteUser(id);
         return ResponseEntity.ok().build();
     }
-
-    /**
-     * Retrieves all cards associated with a specific user.
-     *
-     * @param userId unique identifier of the user
-     * @return list of {@link CardResponse} objects linked to the user
-     */
-    @GetMapping("/{userId}/cards")
-    public ResponseEntity<List<CardResponse>> getUserCards(@PathVariable Long userId) {
-        List<CardResponse> cards = cardService.findCardsByUserId(userId);
-        return ResponseEntity.ok(cards);
-    }
-
-
 }
