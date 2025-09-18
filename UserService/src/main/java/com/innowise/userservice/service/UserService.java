@@ -9,6 +9,9 @@ import com.innowise.userservice.dto.user.UserWithCardsResponse;
 import com.innowise.userservice.http.exception.UserNotFoundException;
 import com.innowise.userservice.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,6 +53,7 @@ public class UserService {
      * @return mapped {@link UserWithCardsResponse} if found
      * @throws UserNotFoundException if no user exists with the given ID
      */
+    @Cacheable(value = "userWithCardsResponse", key = "#id")
     public UserWithCardsResponse findById(Long id) throws UserNotFoundException {
         User user = userRepository.findByIdWithCards(id)
                 .orElseThrow(() -> new UserNotFoundException("Id", id));
@@ -73,6 +77,7 @@ public class UserService {
      * @return mapped {@link UserWithCardsResponse} if found
      * @throws UserNotFoundException if no user exists with the given email
      */
+    @Cacheable(value = "userByEmail", key = "#email")
     public UserWithCardsResponse findUserByEmail(String email) {
         User user = userRepository.findUserByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("Email", email));
@@ -86,6 +91,10 @@ public class UserService {
      * @param request DTO containing updated user data
      * @throws UserNotFoundException if no user exists with the given ID
      */
+    @Caching(evict = {
+            @CacheEvict(value = "userWithCards", key = "#request.id()"),
+            @CacheEvict(value = "userByEmail", key = "#request.email()")
+    })
     @Transactional
     public void updateUser(UpdateUserRequest request) {
         User user = userRepository.findById(request.id())
@@ -111,6 +120,7 @@ public class UserService {
      * @param id unique identifier of the user to delete
      * @throws UserNotFoundException if no user exists with the given ID
      */
+    @CacheEvict(value = "userWithCards", key = "#id")
     @Transactional
     public void deleteUser(Long id) {
         User user = userRepository.findByIdWithCards(id)
