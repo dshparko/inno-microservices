@@ -53,7 +53,7 @@ public class UserService {
      * @return mapped {@link UserWithCardsResponse} if found
      * @throws UserNotFoundException if no user exists with the given ID
      */
-    @Cacheable(value = "userWithCardsResponse", key = "#id")
+    @Cacheable(value = "userWithCards", key = "#id")
     public UserWithCardsResponse findById(Long id) throws UserNotFoundException {
         User user = userRepository.findByIdWithCards(id)
                 .orElseThrow(() -> new UserNotFoundException("Id", id));
