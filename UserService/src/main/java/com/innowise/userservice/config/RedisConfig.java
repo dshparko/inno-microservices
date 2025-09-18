@@ -7,10 +7,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.innowise.userservice.dto.user.UserWithCardsResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
-import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
+import org.springframework.data.redis.cache.RedisCacheManager;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
@@ -26,6 +29,21 @@ import java.time.Duration;
 @Configuration
 public class RedisConfig {
     /**
+     * Creates and configures a {@link RedisCacheManager} for managing application-level caches.
+     * Applies the custom {@link RedisCacheConfiguration} defined in {@link #cacheConfiguration()} as the default
+     * for all caches used via Spring's caching annotations ({@code @Cacheable}, {@code @CacheEvict}, etc.).
+     *
+     * @param connectionFactory Redis connection factory used to communicate with the Redis server
+     * @return configured {@link RedisCacheManager} instance with default cache behavior
+     */
+    @Bean
+    public RedisCacheManager cacheManager(RedisConnectionFactory connectionFactory) {
+        return RedisCacheManager.builder(connectionFactory)
+                .cacheDefaults(cacheConfiguration())
+                .build();
+    }
+
+    /**
      * Defines the default Redis cache configuration.
      * - Sets TTL to 60 minutes for all cache entries.
      * - Disables caching of null values.
@@ -36,14 +54,14 @@ public class RedisConfig {
      */
     @Bean
     public RedisCacheConfiguration cacheConfiguration() {
+        Jackson2JsonRedisSerializer<UserWithCardsResponse> serializer =
+                new Jackson2JsonRedisSerializer<>(redisObjectMapper(), UserWithCardsResponse.class);
+
         return RedisCacheConfiguration.defaultCacheConfig()
                 .entryTtl(Duration.ofMinutes(60))
                 .disableCachingNullValues()
-                .serializeKeysWith(
-                        RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer())
-                )
-                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer
-                        (new GenericJackson2JsonRedisSerializer(redisObjectMapper())));
+                .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
+                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(serializer));
     }
 
     /**

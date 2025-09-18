@@ -23,10 +23,9 @@ spring:
       timeout: 6000
       client-type: lettuce
       connect-timeout: 3000
-
-    cache:
-      type: redis
-      redis:
-        time-to-live: 60000
-        cache-null-values: false
-        use-key-prefix: true
+  cache:
+    type: redis
+    redis:
+      time-to-live: 60000
+      cache-null-values: false
+      use-key-prefix: true
