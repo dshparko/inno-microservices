@@ -59,6 +59,7 @@ class CardServiceTest {
         card.setUser(user);
 
         cardResponse = new CardResponse(
+                100L,
                 "1234-5678",
                 "Darya",
                 LocalDate.of(2030, 1, 1),

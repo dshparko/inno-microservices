@@ -12,6 +12,7 @@ import java.time.LocalDate;
  * @Version 1.0
  */
 public record CardResponse(
+        Long id,
         String number,
         String holder,
         LocalDate expirationDate,
