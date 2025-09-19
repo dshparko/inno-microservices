@@ -1,4 +1,4 @@
-package com.innowise.userservice.service;
+package com.innowise.userservice.service.integration;
 
 import com.innowise.userservice.database.entity.Card;
 import com.innowise.userservice.database.entity.User;
@@ -8,7 +8,8 @@ import com.innowise.userservice.dto.card.CardResponse;
 import com.innowise.userservice.dto.card.CreateCardRequest;
 import com.innowise.userservice.dto.card.UpdateCardRequest;
 import com.innowise.userservice.http.exception.CardNotFoundException;
-import com.innowise.userservice.mapper.CardMapper;
+import com.innowise.userservice.service.CardService;
+import com.innowise.userservice.service.config.IntegrationTestBase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -33,9 +34,6 @@ class CardServiceTestIT extends IntegrationTestBase {
 
     @Autowired
     private CardRepository cardRepository;
-
-    @Autowired
-    private CardMapper cardMapper;
 
     @BeforeEach
     void cleanDatabase() {
