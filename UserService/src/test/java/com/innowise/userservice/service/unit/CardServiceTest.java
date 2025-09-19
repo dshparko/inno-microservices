@@ -1,4 +1,4 @@
-package com.innowise.userservice.service;
+package com.innowise.userservice.service.unit;
 
 import com.innowise.userservice.database.entity.Card;
 import com.innowise.userservice.database.entity.User;
@@ -10,6 +10,7 @@ import com.innowise.userservice.dto.card.UpdateCardRequest;
 import com.innowise.userservice.http.exception.CardNotFoundException;
 import com.innowise.userservice.http.exception.UserNotFoundException;
 import com.innowise.userservice.mapper.CardMapper;
+import com.innowise.userservice.service.CardService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

@@ -1,4 +1,4 @@
-package com.innowise.userservice.service;
+package com.innowise.userservice.service.unit;
 
 import com.innowise.userservice.database.entity.User;
 import com.innowise.userservice.database.repository.UserRepository;
@@ -8,6 +8,7 @@ import com.innowise.userservice.dto.user.UserResponse;
 import com.innowise.userservice.dto.user.UserWithCardsResponse;
 import com.innowise.userservice.http.exception.UserNotFoundException;
 import com.innowise.userservice.mapper.UserMapper;
+import com.innowise.userservice.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
