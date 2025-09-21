@@ -79,7 +79,8 @@ jobs:
           -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }} \
           -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
           -Dsonar.login=${{ secrets.SONAR_TOKEN }} \
-          -Dsonar.organization=${{secrets.ORGANIZATION}}
+          -Dsonar.organization=${{secrets.ORGANIZATION}} \
+          -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
 
   docker:
     runs-on: ubuntu-latest
