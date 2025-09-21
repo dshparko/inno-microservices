@@ -35,6 +35,8 @@ public interface UserMapper {
      * @param request the DTO containing user creation data
      * @return the mapped user entity
      */
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "userCards", ignore = true)
     User mapToEntity(CreateUserRequest request);
 
     /**

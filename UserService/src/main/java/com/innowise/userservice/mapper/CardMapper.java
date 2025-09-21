@@ -3,7 +3,6 @@ package com.innowise.userservice.mapper;
 import com.innowise.userservice.database.entity.Card;
 import com.innowise.userservice.dto.card.CardResponse;
 import com.innowise.userservice.dto.card.CreateCardRequest;
-import com.innowise.userservice.dto.card.UpdateCardRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -37,16 +36,9 @@ public interface CardMapper {
      * @param request the DTO containing card creation data
      * @return the mapped card entity
      */
+    @Mapping(source = "userId", target = "user.id")
+    @Mapping(target = "id", ignore = true)
     Card mapToEntity(CreateCardRequest request);
-
-    /**
-     * Maps an {@link UpdateCardRequest} DTO to a {@link Card} entity.
-     * Used during card update operations.
-     *
-     * @param request the DTO containing updated card data
-     * @return the mapped card entity
-     */
-    Card mapToEntity(UpdateCardRequest request);
 
     /**
      * Maps a list of {@link Card} entities to a list of {@link CardResponse} DTOs.
