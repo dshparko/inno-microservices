@@ -5,7 +5,7 @@ import com.innowise.userservice.dto.error.ValidationErrorDto;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.http.converter.HttpMessageConversionException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -73,9 +73,9 @@ public class ApiErrorHandler {
      * @param request the originating HTTP request
      * @return HTTP 400 Bad Request with error message
      */
-    @ExceptionHandler(HttpMessageNotReadableException.class)
+    @ExceptionHandler(HttpMessageConversionException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<ErrorResponseDto> handleBadRequest(HttpMessageNotReadableException ex,
+    public ResponseEntity<ErrorResponseDto> handleBadRequest(HttpMessageConversionException ex,
                                                              HttpServletRequest request) {
         ErrorResponseDto response = new ErrorResponseDto(
                 HttpStatus.BAD_REQUEST.value(),
