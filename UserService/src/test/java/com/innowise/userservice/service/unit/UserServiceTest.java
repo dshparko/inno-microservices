@@ -1,5 +1,6 @@
 package com.innowise.userservice.service.unit;
 
+import com.innowise.userservice.database.entity.Card;
 import com.innowise.userservice.database.entity.User;
 import com.innowise.userservice.database.repository.UserRepository;
 import com.innowise.userservice.dto.user.CreateUserRequest;
@@ -22,8 +23,11 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -193,6 +197,58 @@ class UserServiceTest {
 
         assertEquals(1, result.size());
         assertIterableEquals(List.of(userWithCardsResponse), result);
+    }
+
+    @Test
+    @DisplayName("removeCard should detach card and remove from userCards")
+    void removeCard_shouldDetachAndRemove() {
+        Card card = new Card();
+        card.setId(1L);
+        card.setUser(user);
+
+        user.getUserCards().add(card);
+
+        user.removeCard(card);
+
+        assertFalse(user.getUserCards().contains(card));
+        assertNull(card.getUser());
+    }
+
+    @Test
+    @DisplayName("removeCard should be safe if card isn't in collection")
+    void removeCard_shouldNotFailIfCardAbsent() {
+
+        Card card = new Card();
+        card.setId(2L);
+        card.setUser(user);
+
+        user.removeCard(card);
+
+        assertFalse(user.getUserCards().contains(card));
+        assertNull(card.getUser());
+    }
+
+    @Test
+    @DisplayName("removeCard should not fail on null")
+    void removeCard_shouldHandleNullSafely() {
+        assertDoesNotThrow(() -> user.removeCard(null));
+    }
+
+    @Test
+    @DisplayName("addCard should link card to user and add to collection")
+    void addCard_shouldLinkAndAdd() {
+        Card card = new Card();
+
+        user.addCard(card);
+
+        assertTrue(user.getUserCards().contains(card));
+        assertEquals(user, card.getUser());
+    }
+
+    @Test
+    @DisplayName("addCard should not fail on null")
+    void addCard_shouldHandleNullSafely() {
+        assertDoesNotThrow(() -> user.addCard(null));
     }
 
 }

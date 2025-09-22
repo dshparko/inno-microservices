@@ -60,11 +60,17 @@ public class User {
     private List<Card> userCards = new ArrayList<>();
 
     public void addCard(Card card) {
+        if (card == null) {
+            return;
+        }
         userCards.add(card);
         card.setUser(this);
     }
 
     public void removeCard(Card card) {
+        if (card == null) {
+            return;
+        }
         userCards.remove(card);
         card.setUser(null);
     }

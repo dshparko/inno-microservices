@@ -215,4 +215,26 @@ class CardServiceTest {
         assertEquals(1, result.size());
         assertEquals(cardResponse, result.get(0));
     }
+
+    @Test
+    @DisplayName("getUserId should return user ID when user is present")
+    void getUserId_shouldReturnUserId() {
+        user.setId(42L);
+
+        card.setUser(user);
+
+        Long result = card.getUserId();
+
+        assertEquals(42L, result);
+    }
+
+    @Test
+    @DisplayName("getUserId should return null when user is null")
+    void getUserId_shouldReturnNullIfUserIsNull() {
+        card.setUser(null);
+
+        Long result = card.getUserId();
+
+        assertNull(result);
+    }
 }
