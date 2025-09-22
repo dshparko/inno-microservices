@@ -103,6 +103,6 @@ public class ApiErrorHandler {
                 request.getRequestURI()
         );
 
-        return ResponseEntity.badRequest().body(response);
+        return ResponseEntity.internalServerError().body(response);
     }
 }
